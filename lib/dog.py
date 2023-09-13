@@ -17,8 +17,16 @@ class Dog:
         """
         CURSOR.execute(sql, (self.name, self.breed))
         CONN.commit()
-        # ipdb.set_trace()
         self.id = CURSOR.execute('select id from dogs order by id desc limit 1').fetchone()[0]
+
+    def update(self):
+        sql = """
+            update dogs
+            set name = ?, breed = ?
+            where id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.breed, self.id))
+        CONN.commit()
 
     @classmethod
     def create(cls, name, breed):
@@ -86,16 +94,6 @@ class Dog:
         else:
             new_dog = cls.create(name, breed)
             return cls.new_from_db((new_dog.id, new_dog.name, new_dog. breed))
-        
-    def update(self):
-        sql = """
-            update dogs
-            set name = ?, breed = ?
-            where id = ?
-        """
-        CURSOR.execute(sql, (self.name, self.breed, self.id))
-        CONN.commit()
-        # ipdb.set_trace()
 
 
 # Dog.drop_table()
